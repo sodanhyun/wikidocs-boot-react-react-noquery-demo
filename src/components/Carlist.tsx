@@ -9,12 +9,10 @@ import Stack from '@mui/material/Stack';
 import AddCar from './AddCar';
 import EditCar from './EditCar';
 import { Car } from '../types';
+import useAuthStore from "../store.js";
 
-type CarlistProps = {
-  logOut?: () => void;
-}
-
-function Carlist({ logOut }: CarlistProps) {
+function Carlist({}) {
+  const {logout} = useAuthStore();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<Car[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -78,6 +76,11 @@ function Carlist({ logOut }: CarlistProps) {
     },
   ]; 
 
+  const handleLogout = () => {
+    logout();
+    sessionStorage.setItem("jwt", "");
+  }
+
   if (isLoading) {
     return <span>Loading...</span>
   }
@@ -89,7 +92,7 @@ function Carlist({ logOut }: CarlistProps) {
       <>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <AddCar loadCarData={loadCarData} />
-          <Button onClick={logOut}>Log out</Button>
+          <Button onClick={handleLogout}>Log out</Button>
         </Stack>
         <DataGrid
           rows={data}

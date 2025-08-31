@@ -3,10 +3,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
-
 import Login from './components/Login';
 import { Route, Routes } from 'react-router-dom';
 import Carlist from './components/Carlist';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   return (
@@ -20,8 +20,8 @@ function App() {
         </Toolbar>
       </AppBar>
       <Routes>
-        <Route path='/' element={<Login/>}/>
-        <Route path='/cars' element={<Carlist/>}/>
+        <Route path='/' element={<PrivateRoute><Carlist/></PrivateRoute>}/>
+        <Route path='/login' element={<Login/>}/>
       </Routes>
     </Container>
   );
