@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { getCars, deleteCar } from '../api/carapi';
+import { getCars, deleteCar } from '../api/carapi.js';
 import { DataGrid, GridColDef, GridCellParams, GridToolbar } from '@mui/x-data-grid';
 import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import AddCar from './AddCar';
-import EditCar from './EditCar';
-import { Car } from '../types';
+import AddCar from '../components/AddCar.js';
+import EditCar from '../components/EditCar.js';
+import { Car } from '../types.js';
 import useAuthStore from "../store.js";
 
 function Carlist({}) {

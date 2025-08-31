@@ -3,17 +3,27 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
-import Login from './components/Login';
-import { Route, Routes } from 'react-router-dom';
-import Carlist from './components/Carlist';
-import PrivateRoute from './components/PrivateRoute';
+import Login from './pages/Login';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import Carlist from './pages/Carlist';
+import useAuthStore from "./store.js";
+
+interface PrivateRouteProps {
+  children: JSX.Element;
+}
+
+function PrivateRoute({ children }: PrivateRouteProps) {
+  const {isAuthenticated} = useAuthStore();
+
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+}
 
 function App() {
   return (
     <Container maxWidth="xl">
       <CssBaseline />
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar >
           <Typography variant="h6">
             Car Shop
           </Typography>

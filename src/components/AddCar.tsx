@@ -12,7 +12,6 @@ interface AddCarProps {
 }
 
 function AddCar({loadCarData}: AddCarProps) {
-
   const [open, setOpen] = useState(false);
   const [car, setCar] = useState<Car>({
     brand: '',

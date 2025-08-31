@@ -1,17 +1,12 @@
 import { useState } from 'react';
-import axios from 'axios';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
-import Carlist from './Carlist';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../store.js';
-
-type User = {
-  username: string;
-  password: string;
-}
+import { User } from '../types.js';
+import { getAuthToken } from '../api/authapi.js';
 
 function Login() {
   const navigate = useNavigate();
@@ -27,9 +22,7 @@ function Login() {
   }
 
   const handleLogin = () => {
-    axios.post(import.meta.env.VITE_API_URL + "/login", user, {
-      headers: { 'Content-Type': 'application/json' }
-    })
+    getAuthToken(user)
     .then(res => {
       const jwtToken = res.headers.authorization;
       if (jwtToken !== null) {
