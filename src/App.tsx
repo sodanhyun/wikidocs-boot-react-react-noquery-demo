@@ -6,7 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Login from './pages/Login';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Carlist from './pages/Carlist';
-import useAuthStore from "./store.js";
+import useAuthStore from "./store.ts";
 
 interface PrivateRouteProps {
   children: JSX.Element;

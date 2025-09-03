@@ -9,7 +9,7 @@ import Stack from '@mui/material/Stack';
 import AddCar from '../components/AddCar.js';
 import EditCar from '../components/EditCar.js';
 import { Car } from '../types.js';
-import useAuthStore from "../store.js";
+import useAuthStore from "../store.ts";
 
 function Carlist({}) {
   const {logout} = useAuthStore();

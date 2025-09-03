@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import { useNavigate } from 'react-router-dom';
-import useAuthStore from '../store.js';
+import useAuthStore from '../store.ts';
 import { User } from '../types.js';
 import { getAuthToken } from '../api/authapi.js';
 
