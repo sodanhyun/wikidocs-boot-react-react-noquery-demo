@@ -1,32 +1,34 @@
-import { Car }  from '../types';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { type AxiosRequestConfig } from "axios";
+import type { Car } from "../type"
+
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 const getAxiosConfig = (): AxiosRequestConfig => {
-  const token = sessionStorage.getItem("jwt");
-  return {
-    headers: {
-      'Authorization': token,
-      'Content-Type': 'application/json',
-    },
-  };
-};
-
-export const getCars = async (): Promise<Car[]> => {
-  const response = await axios.get(`${import.meta.env.VITE_API_URL}/cars`, getAxiosConfig());
-  return response.data;
+    const token = sessionStorage.getItem('jwt');
+    return {
+        headers: {
+            'Authorization': token
+        }
+    }
 }
 
-export const deleteCar = async (carId: number): Promise<number> => {
-  const response = await axios.delete(`${import.meta.env.VITE_API_URL}/cars/${carId}`, getAxiosConfig());
-  return response.data
+//자동차 목록 조회
+export const getCars = async (): Promise<Car[]> => {
+    const response = await axios.get(`${BASE_URL}/cars`, getAxiosConfig());
+    return response.data;
+}
+
+export const deleteCar = async (id: number): Promise<number> => {
+    const response = await axios.delete(`${BASE_URL}/cars/${id}`, getAxiosConfig());
+    return response.data;
 }
 
 export const addCar = async (car: Car): Promise<Car> => {
-  const response = await axios.post(`${import.meta.env.VITE_API_URL}/cars`, car, getAxiosConfig());
-  return response.data;
+    const response = await axios.post(`${BASE_URL}/cars`, car, getAxiosConfig());
+    return response.data;
 }
 
 export const updateCar = async (car: Car): Promise<Car> => {
-  const response = await axios.put(`${import.meta.env.VITE_API_URL}/cars`, car, getAxiosConfig());
-  return response.data;
+    const response = await axios.put(`${BASE_URL}/cars`, car, getAxiosConfig());
+    return response.data;
 }

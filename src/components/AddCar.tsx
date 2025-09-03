@@ -1,59 +1,64 @@
-import { useState } from 'react';
-import { addCar } from '../api/carapi';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
-import CarDialogContent from './CarDialogContent';
-import Button from '@mui/material/Button';
-import { Car } from '../types';
+import { useState } from "react";
+import type { Car } from "../type";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { addCar } from "../api/carApi";
+import CarDialogContent from "./CarDialogContent";
 
-interface AddCarProps {
-  loadCarData: () => void;
+type AddCarProps = {
+    loadCarData: () => void;
 }
 
-function AddCar({loadCarData}: AddCarProps) {
-  const [open, setOpen] = useState(false);
-  const [car, setCar] = useState<Car>({
-    brand: '',
-    model: '',
-    color: '',
-    registrationNumber: '',
-    modelYear: 0,
-    price: 0
-  });
+export default function AddCar({ loadCarData } : AddCarProps) {
+    const [open, setOpen] = useState(false);
+    const [car, setCar] = useState<Car>({
+        brand: '',
+        model: '',
+        color: '',
+        registrationNumber: '',
+        modelYear: 0,
+        price: 0
+    });
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  
-  const handleClose = () => {
-    setOpen(false);
-  };    
-  
-  const handleChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-    setCar({...car, [event.target.name]: event.target.value});
-  }
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
-  const handleSave = () => {
-    addCar(car);
-    loadCarData();
-    setCar({ brand: '', model: '', color: '', registrationNumber: '', modelYear: 0, price: 0 });
-    handleClose();
-  }  
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        const name = e.target.name;
+        setCar({ ...car, [name]: value});
+    }
 
-  return(
-    <>
-      <Button onClick={handleClickOpen}>New Car</Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>New car</DialogTitle>
-          <CarDialogContent car={car} handleChange={handleChange} />
-        <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSave}>Save</Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
+    const handleSave = async () => {
+        await addCar(car);
+        // car list reload
+        loadCarData();
+        setCar({
+            brand: '',
+            model: '',
+            color: '',
+            registrationNumber: '',
+            modelYear: 0,
+            price: 0
+        });
+        handleClose();
+    }
+
+    return (
+        <>
+            <Button onClick={handleOpen}>New Car</Button>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>New Car</DialogTitle>
+                <DialogContent>
+                    <CarDialogContent 
+                        car={car}
+                        handleChange={handleChange}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleSave}>저장</Button>
+                    <Button onClick={handleClose}>닫기</Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    )
 }
-
-export default AddCar;

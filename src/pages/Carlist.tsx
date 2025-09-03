@@ -1,114 +1,103 @@
-import { useEffect, useState } from 'react';
-import { getCars, deleteCar } from '../api/carapi.js';
-import { DataGrid, GridColDef, GridCellParams, GridToolbar } from '@mui/x-data-grid';
-import Snackbar from '@mui/material/Snackbar';
-import IconButton from '@mui/material/IconButton';
+import { useEffect, useState } from "react"
+import type { Car } from "../type"
+import { deleteCar, getCars } from "../api/carApi";
+import { DataGrid } from "@mui/x-data-grid";
+import type { GridCellParams, GridColDef } from "@mui/x-data-grid";
+import { Button, Snackbar, Tooltip } from "@mui/material";
+import AddCar from "../components/AddCar";
+import EditCar from "../components/EditCar";
+import { IconButton } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import AddCar from '../components/AddCar.js';
-import EditCar from '../components/EditCar.js';
-import { Car } from '../types.js';
-import useAuthStore from "../store.ts";
+import { useAuthStore } from "../store";
 
-function Carlist({}) {
-  const {logout} = useAuthStore();
-  const [open, setOpen] = useState(false);
-  const [data, setData] = useState<Car[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isError, setIsError] = useState<boolean>(false);
+export default function CarList() {
+    const { logout } = useAuthStore();
+    const [data, setData] = useState<Car[]>([]);
+    const [toastVal, setToastVal] = useState({
+        open: false, msg: ''
+    });
 
-  const loadCarData = () => {
-    setIsLoading(true);
-    getCars()
-    .then(res => {
-      setData(res);
-      setIsLoading(false);
-      setIsError(false);
-    })
-    .catch(err => {
-      console.log(err);
-      setIsLoading(false);
-      setIsError(true);
-    })
-  }
+    const columns: GridColDef[] = [
+        {field: 'brand', headerName: '제조사', width: 200},
+        {field: 'model', headerName: '모델', width: 200},
+        {field: 'color', headerName: '색상', width: 200},
+        {field: 'registrationNumber', headerName: '등록넘버', width: 150},
+        {field: 'modelYear', headerName: '연식', width: 150},
+        {field: 'price', headerName: '가격', width: 150},
+        {
+            field: 'edit',
+            headerName: '',
+            width: 90,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            renderCell: (params: GridCellParams) => (
+                <EditCar 
+                    carData={params.row} 
+                    loadCarData={loadCarData}
+                />
+            )
+        },
+        {
+            field: 'delete',
+            headerName: '',
+            width: 90,
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            renderCell: (params: GridCellParams) => (
+                <Tooltip title="삭제">
+                    <IconButton size="small" onClick={() => deleteCarData(params.row.id)}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Tooltip>
+            )
+        }
+    ]
 
-  useEffect(() => {
-    loadCarData();
-  }, [])
+    const loadCarData = () => {
+        getCars()
+        .then(res => setData(res))
+        .catch(err => console.log(err));
+    }
 
-  const columns: GridColDef[] = [
-    {field: 'brand', headerName: 'Brand', width: 200},
-    {field: 'model', headerName: 'Model', width: 200},
-    {field: 'color', headerName: 'Color', width: 200},
-    {field: 'registrationNumber', headerName: 'Reg.nr.', width: 150},
-    {field: 'modelYear', headerName: 'Model Year', width: 150},
-    {field: 'price', headerName: 'Price', width: 150},
-    {
-      field: 'edit',
-      headerName: '',
-      width: 90,
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true,
-      renderCell: (params: GridCellParams) =>
-        <EditCar carData={params.row} loadCarData={loadCarData} />
-    },
-    {
-      field: 'delete',
-      headerName: '',
-      width: 90,
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true,
-      renderCell: (params: GridCellParams) => (
-        <IconButton aria-label="delete" size="small"
-          onClick={ async () => {
-            if (window.confirm(`Are you sure you want to delete ${params.row.brand} ${params.row.model}?`)) {
-              await deleteCar(params.row.id);
-              loadCarData();
-            } 
-          }}       
-        >
-          <DeleteIcon fontSize="small" />
-        </IconButton>
-      ),
-    },
-  ]; 
+    const deleteCarData = (id: number) => {
+        if(confirm(`${id}번 데이터를 삭제하시겠습니까?`)) {
+            deleteCar(id)
+            .then((res) => {
+                loadCarData();
+                setToastVal({open: true, msg: `${res}번 데이터가 삭제되었습니다`});
+            })
+            .catch(err => console.log(err));
+        }
+    }
 
-  const handleLogout = () => {
-    logout();
-    sessionStorage.setItem("jwt", "");
-  }
+    const handleLogout = () => {
+        sessionStorage.setItem("jwt", "");
+        logout();
+    }
 
-  if (isLoading) {
-    return <span>Loading...</span>
-  }
-  else if (isError) {
-    return <span>Error when fetching cars...</span>
-  }
-   else {
+    useEffect(() => {
+        loadCarData();
+    }, []);
+
     return (
-      <>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <AddCar loadCarData={loadCarData} />
-          <Button onClick={handleLogout}>Log out</Button>
-        </Stack>
-        <DataGrid
-          rows={data}
-          columns={columns}
-          disableRowSelectionOnClick={true}
-          getRowId={row => row.id}
-          slots={{ toolbar: GridToolbar }}
-        />
-        <Snackbar
-          open={open}
-          autoHideDuration={2000}
-          onClose={() => setOpen(false)}
-          message="Car deleted" />
+        <>
+            <AddCar loadCarData={loadCarData}/>
+            <Button onClick={handleLogout}>로그아웃</Button>
+            <DataGrid 
+                rows={data}
+                columns={columns}
+                getRowId={row => row.id}
+                disableRowSelectionOnClick={true}
+                showToolbar
+            />
+            <Snackbar
+                open={toastVal.open}
+                onClose={() => setToastVal({open: false, msg: ''})}
+                message={toastVal.msg}
+                autoHideDuration={2000}
+            />
         </>
-    );
-  }
+    )
 }
-
-export default Carlist;

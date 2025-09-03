@@ -1,64 +1,65 @@
-import { useState } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import { useNavigate } from 'react-router-dom';
-import useAuthStore from '../store.ts';
-import { User } from '../types.js';
-import { getAuthToken } from '../api/authapi.js';
+import { Button, Snackbar, Stack, TextField } from "@mui/material";
+import { useState } from "react";
+import type { User } from "../type";
+import { getAuthToken } from "../api/loginApi";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store";
 
-function Login() {
-  const navigate = useNavigate();
-  const {login} = useAuthStore();
-  const [user, setUser] = useState<User>({
-    username: '',
-    password: ''
-  });
-  const [open, setOpen] = useState(false);
+export default function Login() {
+    const navigate = useNavigate();
+    const { login } = useAuthStore();
+    const [toastOpen, setToastOpen] = useState(false);
+    const [user, setUser] = useState<User>({
+        username: '',
+        password: ''
+    });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({...user, [event.target.name] : event.target.value});
-  }
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUser({...user, [e.target.name]: e.target.value});
+    };
 
-  const handleLogin = () => {
-    getAuthToken(user)
-    .then(jwtToken => {
-      if (jwtToken !== null) {
-        sessionStorage.setItem("jwt", jwtToken);
-        login();
-        navigate("/")
-      }
-    })
-    .catch(() => setOpen(true));
-  }  
+    const handleLogin = () => {
+        getAuthToken(user)
+        .then((token) => {
+            if(token !== null) {
+                sessionStorage.setItem("jwt", token);
+                login();
+                navigate("/");
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            setToastOpen(true);
+        });
+    }
 
-  return(
-    <Stack spacing={2} alignItems="center" mt={2}>
-      <TextField
-        name="username"
-        label="Username"
-        onChange={handleChange} />
-      <TextField
-        type="password"
-        name="password"
-        label="Password"
-        onChange={handleChange}/>
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={handleLogin}>
-          Login
-      </Button>
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={() => setOpen(false)}
-        message="Login failed: Check your username and password"
-      />
-    </Stack>
-  );
-  
+    return (
+        <>
+        <Stack spacing={2} mt={2} alignItems="center">
+            <TextField
+                label="ID"
+                name="username"
+                onChange={handleChange}
+            />
+            <TextField
+                label="PW"
+                name="password"
+                onChange={handleChange}
+            />
+            <Button
+                color="primary"
+                onClick={handleLogin}
+            >
+                로그인
+            </Button>
+            <Snackbar
+                open={toastOpen}
+                autoHideDuration={3000}
+                onClose={() => setToastOpen(false)}
+                message='로그인 실패'
+            />
+        </Stack>
+        </>
+    )
+
 }
-
-export default Login;

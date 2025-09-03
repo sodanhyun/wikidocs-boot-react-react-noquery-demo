@@ -1,15 +1,13 @@
-import { create } from "zustand"
+import { create } from "zustand";
 
-interface AuthState {
-  isAuthenticated: boolean;
-  login: () => void;
-  logout: () => void;
+type AuthStore = {
+    isAuthenticated: boolean;
+    login: () => void;
+    logout: () => void;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
-    isAuthenticated: false,
+export const useAuthStore = create<AuthStore>((set) => ({
+    isAuthenticated: !!sessionStorage.getItem("jwt"),
     login: () => set({isAuthenticated: true}),
-    logout: () => set({isAuthenticated: false}),
+    logout: () => set({isAuthenticated: false})
 }));
-
-export default useAuthStore;

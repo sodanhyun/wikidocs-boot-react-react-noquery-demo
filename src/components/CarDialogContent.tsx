@@ -1,33 +1,51 @@
-import DialogContent from '@mui/material/DialogContent';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import { Car } from '../types';
+import { Stack, TextField } from "@mui/material";
+import type { Car } from "../type";
 
-type DialogFormProps = {
-  car: Car;
-  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+type CarDialogContentProps = {
+    car: Car;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-
-function CarDialogContent({ car, handleChange }: DialogFormProps) {
-  return (
-    <>
-      <DialogContent>
+export default function CarDialogContent({car, handleChange}: CarDialogContentProps) {
+    return (
+        <>
         <Stack spacing={2} mt={1}>
-          <TextField label="Brand" name="brand"
-          value={car.brand} onChange={handleChange}/>
-          <TextField label="Model" name="model"
-          value={car.model} onChange={handleChange}/>
-          <TextField label="Color" name="color"
-          value={car.color} onChange={handleChange}/>
-          <TextField label="Year" name="modelYear"
-          value={car.modelYear} onChange={handleChange}/>
-          <TextField label="Reg.nr." name="registrationNumber"
-          value={car.registrationNumber} onChange={handleChange}/>
-          <TextField label="Price" name="price"
-          value={car.price} onChange={handleChange}/>
-        </Stack>     
-      </DialogContent>  
-    </>
-  );
+            <TextField
+                label="제조사"
+                name="brand"
+                value={car.brand}
+                onChange={handleChange}
+            />
+            <TextField 
+                label="모델"
+                name="model"
+                value={car.model}
+                onChange={handleChange}
+            />
+            <TextField 
+                label="색상"
+                name="color"
+                value={car.color}
+                onChange={handleChange}
+            />
+            <TextField 
+                label="연식"
+                name="modelYear"
+                value={car.modelYear}
+                onChange={handleChange}
+            />
+            <TextField 
+                label="등록넘버"
+                name="registrationNumber"
+                value={car.registrationNumber}
+                onChange={handleChange}
+            />
+            <TextField 
+                label="가격"
+                name="price"
+                value={car.price}
+                onChange={handleChange}
+            />
+        </Stack>
+        </>
+    )
 }
-export default CarDialogContent;
