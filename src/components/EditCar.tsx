@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Car } from "../type";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from "@mui/material";
 import CarDialogContent from "./CarDialogContent";
-import { updateCar } from "../api/carApi";
+import { updateCar } from "../api/carapi";
 import EditIcon from '@mui/icons-material/Edit';
 
 type EditCarProps = {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Car } from "../type";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { addCar } from "../api/carApi";
+import { addCar } from "../api/carapi";
 import CarDialogContent from "./CarDialogContent";
 
 type AddCarProps = {

@@ -1,5 +1,5 @@
 import axios from "axios"
-import { User } from "../types"
+import type { User } from "../type";
 
 export const getAuthToken = async (user: User) => {
     const response = await axios.post(import.meta.env.VITE_API_URL + "/login", user, {
