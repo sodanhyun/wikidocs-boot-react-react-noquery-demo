@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import type { Car } from "../type"
-import { deleteCar, getCars } from "../api/carApi";
+import { deleteCar, getCars } from "../api/carapi";
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridCellParams, GridColDef } from "@mui/x-data-grid";
 import { Button, Snackbar, Tooltip } from "@mui/material";
